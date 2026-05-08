@@ -419,15 +419,18 @@
   }
 
   .hero .hero-copy {
-    animation: hero-copy-enter .8s cubic-bezier(.2, .8, .2, 1) both;
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 1.5s ease, transform 1.5s cubic-bezier(.16, 1.12, .32, 1);
+    will-change: opacity, transform;
+  }
+  .hero .hero-copy.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
   .hero .fastpay-hero-bg-mask,
   .hero .hero-cards {
     animation: hero-side-enter .72s ease .52s both;
-  }
-  @keyframes hero-copy-enter {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
   }
   @keyframes hero-side-enter {
     from { opacity: 0; }
@@ -2912,6 +2915,31 @@
     row.addEventListener('mouseenter', () => setLogoSpeed(0.5));
     row.addEventListener('mouseleave', () => setLogoSpeed(1));
   });
+})();
+</script>
+
+<script>
+(() => {
+  const heroCopy = document.querySelector('.hero .hero-copy');
+  if (!heroCopy) return;
+
+  let shown = false;
+  const showHeroCopy = () => {
+    if (shown) return;
+    shown = true;
+    requestAnimationFrame(() => heroCopy.classList.add('is-visible'));
+  };
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    heroCopy.classList.add('is-visible');
+    return;
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(showHeroCopy).catch(showHeroCopy);
+  } else {
+    window.addEventListener('load', showHeroCopy, { once: true });
+  }
 })();
 </script>
 
