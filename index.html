@@ -255,7 +255,7 @@
     font-size: 20px;
     line-height: 1.55;
     color: var(--ink-soft);
-    max-width: 560px;
+    max-width: 540px;
     margin-bottom: 40px;
     font-weight: 400;
   }
@@ -282,6 +282,7 @@
     border: 1px solid #D9D4D7;
     padding: 6px 6px 6px 20px;
     max-width: 520px;
+    min-height: 65px;
     gap: 0;
   }
   .hero-phone-prefix {
@@ -398,30 +399,16 @@
   section.final-cta .cta-error { text-align: center; }
   /* Task 1: Inter font for CTA number inputs */
   .hero-phone-cta .hero-phone-input { font-family: 'Inter', sans-serif; }
-  /* Task 2: Phone locked state after OTP appears */
+  /* Task 2: Phone verified state after OTP appears */
   .cta-phone-locked {
-    background: #FAFAFA !important;
-    border-color: #EDE9EB !important;
-    cursor: default;
+    background: #fff !important;
+    border-color: #D9D4D7 !important;
+    cursor: text;
   }
-  .cta-phone-locked.hero-phone-input-wrap:focus-within { border-color: #EDE9EB !important; }
-  .cta-phone-locked .cta-phone-field { pointer-events: none; color: var(--ink); }
-  /* keep wrap height intact: hide button visually, keep layout space */
-  .cta-phone-locked .cta-step1-btn { visibility: hidden; }
-  /* Task 3: 编辑 edit button */
-  .cta-edit-btn {
-    display: none;
-    background: none;
-    border: none;
-    padding: 0 12px;
-    font-size: 14px;
-    color: var(#B8B2B6);
-    cursor: pointer;
-    font-weight: 500;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .cta-phone-locked .cta-edit-btn { display: block; }
+  .cta-phone-locked.hero-phone-input-wrap:focus-within { border-color: #BFB8BD !important; }
+  .cta-phone-locked .cta-phone-field { color: var(--ink); }
+  .cta-phone-locked .cta-step1-btn { display: none; }
+  .cta-phone-resend .cta-step1-btn { display: none; }
   /* ──────────────────────────────────────────────────── */
   .btn-cta-primary:hover { background: var(--brand-deep); transform: translateY(-1px); }
   .btn-cta-ghost {
@@ -429,6 +416,42 @@
     border-color: var(--line);
     padding: 14px 22px;
     font-size: 15px;
+  }
+
+  .hero .hero-copy {
+    animation: hero-copy-enter .8s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  .hero .fastpay-hero-bg-mask,
+  .hero .hero-cards {
+    animation: hero-side-enter .72s ease .52s both;
+  }
+  @keyframes hero-copy-enter {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hero-side-enter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .reveal-section {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(.16, 1.12, .32, 1);
+  }
+  .reveal-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero .hero-copy,
+    .hero .fastpay-hero-bg-mask,
+    .hero .hero-cards,
+    .reveal-section {
+      animation: none;
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
   }
   .btn-cta-ghost:hover { border-color: var(--ink); }
   .micro-trust {
@@ -675,12 +698,12 @@
     display: flex;
     width: max-content;
     align-items: center;
-    gap: 28px;
+    gap: 72px;
     animation: logo-marquee 72s linear infinite;
   }
   .logo-row:nth-child(2) .logo-track { animation-duration: 86s; }
   .logo-grid .item {
-    width: 140px;
+    width: auto;
     height: 60px;
     display: flex;
     align-items: center;
@@ -689,25 +712,34 @@
   }
   .logo-swap {
     position: relative;
-    display: block;
-    width: 140px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
     height: 60px;
   }
   .logo-swap img {
-    position: absolute;
-    inset: 0;
+    position: static;
     display: block;
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: 60px;
+    max-width: none;
+    max-height: none;
+    transform: none;
     object-fit: contain;
     transition: opacity .18s ease;
+  }
+  .logo-swap .logo-active {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
   .logo-swap .logo-active { opacity: 0; }
   .logo-grid .item:hover .logo-default { opacity: 0; }
   .logo-grid .item:hover .logo-active { opacity: 1; }
   @keyframes logo-marquee {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 14px)); }
+    to { transform: translateX(-50%); }
   }
 
   /* ============ Stats band ============ */
@@ -1124,12 +1156,58 @@
     border: 1px solid rgba(244,0,100,0.13);
     border-radius: 12px;
     padding: 20px 28px;
-    font-size: 18px;
+    font-size: 20px;
     color: var(--ink);
     line-height: 1.6;
     margin-bottom: 40px;
   }
   .about-highlight strong { color: var(--brand); }
+
+  /* ============ Security data ============ */
+  section.security-data {
+    position: relative;
+    height: 238px;
+    overflow: hidden;
+    background: #FFFCFD;
+  }
+  .security-data-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("图片/安全数据/数据安全-1920.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    pointer-events: none;
+  }
+  .security-data-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .security-data-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: 28px;
+    line-height: 1.5;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .security-data-copy {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    max-width: 848px;
+  }
+  @media (min-width: 2200px) {
+    .security-data-bg { background-image: url("图片/安全数据/数据安全-2560.png"); }
+  }
 
   /* ============ FAQ ============ */
   section.faq {
@@ -1293,19 +1371,22 @@
       -webkit-mask-image: linear-gradient(
         180deg,
         rgba(0,0,0,0) 0%,
-        rgba(0,0,0,1) 18%,
+        rgba(0,0,0,0) 32%,
+        rgba(0,0,0,1) 46%,
         rgba(0,0,0,1) 82%,
         rgba(0,0,0,0) 100%
       );
       mask-image: linear-gradient(
         180deg,
         rgba(0,0,0,0) 0%,
-        rgba(0,0,0,1) 18%,
+        rgba(0,0,0,0) 32%,
+        rgba(0,0,0,1) 46%,
         rgba(0,0,0,1) 82%,
         rgba(0,0,0,0) 100%
       );
     }
     .fastpay-hero-bg-mask {
+      inset: -96px 0 0;
       background:
         linear-gradient(180deg,
           rgba(255,255,255,.88) 0%,
@@ -1556,12 +1637,48 @@
       gap: 18px;
     }
     .logos-label { font-size: 12px; }
-    .logo-track { gap: 14px; animation-duration: 58s; }
+    .logo-track { gap: 42px; animation-duration: 58s; }
     .logo-row:nth-child(2) .logo-track { animation-duration: 70s; }
-    .logo-grid .item,
-    .logo-swap {
-      width: 112px;
+    .logo-grid .item {
+      width: auto;
       height: 48px;
+    }
+    .logo-swap {
+      width: auto;
+      height: 48px;
+    }
+    .logo-swap img {
+      height: 48px;
+      max-width: none;
+      max-height: none;
+    }
+    section.security-data {
+      height: auto;
+      padding: 0 20px;
+      background: #fff;
+    }
+    .security-data-bg {
+      inset: 0 20px;
+      background-image: url("图片/安全数据/数据安全-手机端.png");
+      background-size: cover;
+      background-position: center;
+    }
+    .security-data-content {
+      min-height: 321px;
+      padding: 80px 0;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+    .security-data-title {
+      font-size: 22px;
+      line-height: 1.5;
+      max-width: 287px;
+    }
+    .security-data-copy {
+      font-size: 12px;
+      line-height: 1.5;
+      max-width: 350px;
+      text-align: justify;
     }
     .stats-head h2.section-title {
       letter-spacing: 0;
@@ -1856,7 +1973,7 @@
           <span class="accent">赚钱快人一步</span>
         </h1>
         <p class="sub">
-          销售当天结算，资金 T+0 到账，无需等待平台回款周期 —— 让每一笔订单都成为下一次增长的现金流。
+          销售当天结算，资金 T+0 到账，无需等待平台回款周期，<br>让每一笔订单都成为下一次增长的现金流。
         </p>
         <div class="hero-phone-cta">
           <div class="hero-phone-input-wrap cta-phone-wrap">
@@ -1864,7 +1981,6 @@
             <span class="hero-phone-divider"></span>
             <input class="hero-phone-input cta-phone-field" type="tel" placeholder="请输入您的手机号" maxlength="11" />
             <button class="hero-phone-btn cta-step1-btn" type="button">立即使用</button>
-            <button class="cta-edit-btn" type="button">编辑</button>
           </div>
           <p class="cta-error cta-phone-err"></p>
           <div class="cta-otp-wrap">
@@ -1896,7 +2012,7 @@
         <div class="float-card hero-feature-card">
           <div class="fc-row">
             <div>
-              <div class="fc-label">FastPay · 结算速度</div>
+              <div class="fc-label">回款速度</div>
               <div class="fc-amount"><span class="accent">T0</span> 结算</div>
               <div class="fc-meta">最快当日到账</div>
             </div>
@@ -1916,7 +2032,7 @@
         <div class="float-card c3 hero-feature-card">
           <div class="fc-row">
             <div>
-              <div class="fc-label">提现额度高至</div>
+              <div class="fc-label">提现金额高至</div>
               <div class="fc-amount"><span class="accent">1,000 万</span>美金</div>
               <div class="fc-meta">满足旺季资金周转</div>
             </div>
@@ -1990,7 +2106,7 @@
   </section>
 
   <!-- ============ Stats band ============ -->
-  <section class="stats">
+  <section class="stats reveal-section">
     <div class="container">
       <div class="stats-head">
         <div>
@@ -2022,7 +2138,7 @@
   </section>
 
   <!-- ============ Product features ============ -->
-  <section class="product">
+  <section class="product reveal-section">
     <div class="container">
       <div class="product-head">
         <div class="section-eyebrow">适用对象</div>
@@ -2055,7 +2171,7 @@
   </section>
 
   <!-- ============ Seller testimonials ============ -->
-  <section class="testimonials">
+  <section class="testimonials reveal-section">
     <div class="container">
       <div class="testimonials-head">
         <div>
@@ -2120,7 +2236,7 @@
   </section>
 
   <!-- ============ Official partnership ============ -->
-  <section class="official">
+  <section class="official reveal-section">
     <div class="container">
       <div class="official-panel">
         <div class="official-grid">
@@ -2130,7 +2246,7 @@
             </div>
             <h2 class="official-title">中国区<span class="accent">唯一授权</span>，<br></b> Amazon Lending 官方合作</h2>
             <p class="official-copy">
-              FastPay 是 <strong>亚马逊贷款计划</strong> 面向中国跨境卖家的自动回款合作伙伴。
+              FastPay 是 <strong>Amazon Lending</strong> 面向中国跨境卖家的自动还款合作伙伴。
               从 SKU 到回款，Amazon 与 Dowsure 数据直连，资金路径清晰可审计。
             </p>
             <div class="official-points">
@@ -2158,12 +2274,12 @@
   </section>
 
   <!-- ============ How it works ============ -->
-  <section class="flow">
+  <section class="flow reveal-section">
     <div class="container">
       <div class="flow-wrapper">
         <div class="section-eyebrow">运作原理</div>
         <h2 class="section-title">从订单生成到资金到账，只需 4 步</h2>
-        <p class="sub">无需更换运营节奏，FastPay 像一层加速器一样接入你现有的店铺系统。</p>
+        <p class="sub">无需切换支付，不打乱运营节奏，FastPay 像一层加速器一样接入您现有的店铺系统。</p>
         <div class="flow-steps">
           <div class="flow-step">
             <div class="dot"></div>
@@ -2175,19 +2291,19 @@
             <div class="dot"></div>
             <div class="step-num">STEP 02</div>
             <div class="step-title">AI 风控授信</div>
-            <div class="step-desc">读取销售数据，实时生成额度方案。</div>
+            <div class="step-desc">读取销售数据，实时生成回款方案。</div>
           </div>
           <div class="flow-step">
             <div class="dot"></div>
             <div class="step-num">STEP 03</div>
             <div class="step-title">订单即时变现</div>
-            <div class="step-desc">已发货订单即可变现，按天计息。</div>
+            <div class="step-desc">已发货订单即刻变现。</div>
           </div>
           <div class="flow-step">
             <div class="dot"></div>
             <div class="step-num">STEP 04</div>
             <div class="step-title">平台回款自动核销</div>
-            <div class="step-desc">回款自动还本付息，全程零人工。</div>
+            <div class="step-desc">全程零人工。</div>
           </div>
         </div>
       </div>
@@ -2196,7 +2312,7 @@
 
 
   <!-- ============ About ============ -->
-  <section class="about">
+  <section class="about reveal-section">
     <div class="container">
       <div class="stats-head">
         <div>
@@ -2228,6 +2344,15 @@
           <div class="desc">助力跨境卖家资金</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ Security data ============ -->
+  <section class="security-data">
+    <div class="security-data-bg" aria-hidden="true"></div>
+    <div class="container security-data-content">
+      <h2 class="security-data-title">在数据安全层面，Dowsure 已通过 SOC1 TYPE1 鉴证及 ISO27001 认证</h2>
+      <p class="security-data-copy">构建了全方位数据安全防护体系，承诺在未取得卖家同意的情况下，绝不收集、回传、泄露任何卖家数据至任何第三方。</p>
     </div>
   </section>
 
@@ -2278,7 +2403,6 @@
           <span class="hero-phone-divider"></span>
           <input class="hero-phone-input cta-phone-field" type="tel" placeholder="请输入您的手机号" maxlength="11" />
           <button class="hero-phone-btn cta-step1-btn" type="button">立即使用</button>
-          <button class="cta-edit-btn" type="button">编辑</button>
         </div>
         <p class="cta-error cta-phone-err"></p>
         <div class="cta-otp-wrap">
@@ -2792,6 +2916,28 @@
 </script>
 
 <script>
+(() => {
+  const revealSections = Array.from(document.querySelectorAll('.reveal-section'));
+  if (!revealSections.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    revealSections.forEach((section) => section.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+
+  revealSections.forEach((section) => observer.observe(section));
+})();
+</script>
+
+<script>
 /* ── CTA login interaction ──────────────────────────────── */
 (() => {
   function initCTA(cta) {
@@ -2799,7 +2945,6 @@
     const phoneField = cta.querySelector('.cta-phone-field');
     const phoneErr   = cta.querySelector('.cta-phone-err');
     const step1Btn   = cta.querySelector('.cta-step1-btn');
-    const editBtn    = cta.querySelector('.cta-edit-btn');
     const otpWrap    = cta.querySelector('.cta-otp-wrap');
     const otpField   = cta.querySelector('.cta-otp-field');
     const otpTimer   = cta.querySelector('.cta-otp-timer');
@@ -2821,7 +2966,7 @@
 
     function startCountdown() {
       let sec = 60;
-      otpTimer.textContent = '重新获取 ' + sec + 's';
+      otpTimer.textContent = sec + 's';
       if (countdown) clearInterval(countdown);
       countdown = setInterval(() => {
         sec -= 1;
@@ -2830,7 +2975,7 @@
           countdown = null;
           otpTimer.textContent = '重新获取';
         } else {
-          otpTimer.textContent = '重新获取 ' + sec + 's';
+          otpTimer.textContent = sec + 's';
         }
       }, 1000);
     }
@@ -2842,28 +2987,61 @@
       otpWrap.classList.remove('is-open');
       // Restore phone wrap style
       phoneWrap.classList.remove('cta-phone-locked');
-      // Re-enable phone field
-      phoneField.removeAttribute('readonly');
+      phoneWrap.classList.remove('cta-phone-resend');
       // Clear OTP field
       otpField.value = '';
       // Reset timer text
-      otpTimer.textContent = '重新获取 60s';
+      otpTimer.textContent = '重新获取';
       // Clear all errors
       clearErr(phoneErr);
       clearErr(otpErr);
       if (agreeErr) clearErr(agreeErr);
     }
 
-    // Edit button: reset to step 1
-    if (editBtn) {
-      editBtn.addEventListener('click', () => {
-        resetForm();
-      });
+    function unlockPhoneForResend() {
+      if (countdown) { clearInterval(countdown); countdown = null; }
+      phoneWrap.classList.remove('cta-phone-locked');
+      phoneWrap.classList.add('cta-phone-resend');
+      otpWrap.classList.add('is-open');
+      otpField.value = '';
+      otpTimer.textContent = '重新获取';
+      clearErr(phoneErr);
+      clearErr(otpErr);
+      if (agreeErr) clearErr(agreeErr);
     }
+
+    phoneField.addEventListener('input', () => {
+      if (phoneWrap.classList.contains('cta-phone-locked')) {
+        unlockPhoneForResend();
+      }
+    });
+
+    phoneField.addEventListener('keydown', (event) => {
+      if (!phoneWrap.classList.contains('cta-phone-locked')) return;
+      const key = event.key;
+      const isEditKey = key === 'Backspace' || key === 'Delete' || key.length === 1;
+      if (isEditKey) unlockPhoneForResend();
+    });
 
     // Resend OTP on timer click (only when not counting)
     otpTimer.addEventListener('click', () => {
       if (countdown) return;
+      clearErr(phoneErr);
+      if (agreeErr) clearErr(agreeErr);
+
+      const phone = phoneField.value.trim();
+      if (!/^1[3-9]\d{9}$/.test(phone)) {
+        showErr(phoneErr, '请输入正确的11位手机号');
+        return;
+      }
+      if (agreeCheck && !agreeCheck.checked) {
+        if (agreeErr) showErr(agreeErr, '请先阅读并同意相关协议');
+        return;
+      }
+
+      phoneWrap.classList.add('cta-phone-locked');
+      phoneWrap.classList.remove('cta-phone-resend');
+      otpField.value = '';
       startCountdown();
     });
 
@@ -2884,8 +3062,8 @@
 
       // Lock phone wrap
       phoneWrap.classList.add('cta-phone-locked');
-      phoneField.setAttribute('readonly', '');
-      // step1 button hidden via CSS (.cta-phone-locked .cta-step1-btn)
+      phoneWrap.classList.remove('cta-phone-resend');
+      // step1 button hidden via CSS while the phone row stays editable
       // Open OTP accordion
       otpWrap.classList.add('is-open');
       // Start countdown
