@@ -138,7 +138,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    pointer-events: auto;
+    pointer-events: none;
     background: #ffffff;
   }
   .fastpay-hero-bg canvas {
@@ -1205,7 +1205,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    pointer-events: auto;
+    pointer-events: none;
     background: #ffffff;
   }
   .final-cta-bg canvas {
@@ -1839,8 +1839,8 @@
             <span class="hero-phone-prefix">+86</span>
             <span class="hero-phone-divider"></span>
             <input class="hero-phone-input cta-phone-field" type="tel" placeholder="请输入您的手机号" maxlength="11" />
-            <button class="hero-phone-btn cta-step1-btn">立即使用</button>
-            <button class="cta-edit-btn">编辑</button>
+            <button class="hero-phone-btn cta-step1-btn" type="button">立即使用</button>
+            <button class="cta-edit-btn" type="button">编辑</button>
           </div>
           <p class="cta-error cta-phone-err"></p>
           <div class="cta-otp-wrap">
@@ -1848,7 +1848,7 @@
               <div class="hero-phone-input-wrap cta-otp-row">
                 <input class="hero-phone-input cta-otp-field" type="tel" placeholder="请输入手机验证码" maxlength="6" />
                 <span class="cta-otp-timer">重新获取 60s</span>
-                <button class="hero-phone-btn cta-step2-btn">立即使用</button>
+                <button class="hero-phone-btn cta-step2-btn" type="button">立即使用</button>
               </div>
               <p class="cta-error cta-otp-err"></p>
             </div>
@@ -2253,8 +2253,8 @@
           <span class="hero-phone-prefix">+86</span>
           <span class="hero-phone-divider"></span>
           <input class="hero-phone-input cta-phone-field" type="tel" placeholder="请输入您的手机号" maxlength="11" />
-          <button class="hero-phone-btn cta-step1-btn">立即使用</button>
-          <button class="cta-edit-btn">编辑</button>
+          <button class="hero-phone-btn cta-step1-btn" type="button">立即使用</button>
+          <button class="cta-edit-btn" type="button">编辑</button>
         </div>
         <p class="cta-error cta-phone-err"></p>
         <div class="cta-otp-wrap">
@@ -2262,7 +2262,7 @@
             <div class="hero-phone-input-wrap cta-otp-row">
               <input class="hero-phone-input cta-otp-field" type="tel" placeholder="请输入手机验证码" maxlength="6" />
               <span class="cta-otp-timer">重新获取 60s</span>
-              <button class="hero-phone-btn cta-step2-btn">立即使用</button>
+              <button class="hero-phone-btn cta-step2-btn" type="button">立即使用</button>
             </div>
             <p class="cta-error cta-otp-err"></p>
           </div>
@@ -2491,6 +2491,7 @@
     renderer.setClearColor(0xffffff, 0);
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
+    renderer.domElement.style.maxWidth = "none";
     renderer.domElement.style.display = "block";
 
     container.appendChild(renderer.domElement);
@@ -2514,19 +2515,31 @@
     const pointerCurrent = new THREE.Vector2(0, 0);
     const pointerSmooth = 8;
     const clock = new THREE.Clock();
+    let canvasWidth = 0;
+    let canvasHeight = 0;
 
-    function resize() {
+    function resize({ force = false } = {}) {
       const w = container.clientWidth || 1;
       const h = container.clientHeight || 1;
-      renderer.setSize(w, h, false);
-      material.uniforms.uCanvas.value.set(w, h);
+
+      // CTA interactions animate section height; resizing WebGL every frame clears the canvas.
+      // Keep the buffer stable for height-only changes so button clicks never flash the background.
+      const widthChanged = Math.abs(w - canvasWidth) > 2;
+      if (force || widthChanged) {
+        renderer.setSize(w, h, false);
+        material.uniforms.uCanvas.value.set(w, h);
+        renderer.domElement.style.width = w + "px";
+        renderer.domElement.style.height = h + "px";
+        canvasWidth = w;
+        canvasHeight = h;
+      }
 
       const baseScale = scale;
       const responsiveScale = baseScale * Math.min(1.18, Math.max(0.82, w / 1920));
       material.uniforms.uScale.value = responsiveScale;
     }
 
-    resize();
+    resize({ force: true });
 
     const ro = "ResizeObserver" in window ? new ResizeObserver(resize) : null;
     if (ro) ro.observe(container);
@@ -2534,6 +2547,15 @@
 
     function onPointerMove(e) {
       const rect = container.getBoundingClientRect();
+      if (
+        e.clientX < rect.left ||
+        e.clientX > rect.right ||
+        e.clientY < rect.top ||
+        e.clientY > rect.bottom
+      ) {
+        pointerTarget.set(0, 0);
+        return;
+      }
       const x = ((e.clientX - rect.left) / (rect.width || 1)) * 2 - 1;
       const y = -(((e.clientY - rect.top) / (rect.height || 1)) * 2 - 1);
       pointerTarget.set(x, y);
@@ -2543,8 +2565,8 @@
       pointerTarget.set(0, 0);
     }
 
-    container.addEventListener("pointermove", onPointerMove);
-    container.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", onPointerLeave);
 
     let rafId = null;
 
@@ -2570,8 +2592,8 @@
       if (rafId) cancelAnimationFrame(rafId);
       if (ro) ro.disconnect();
       else window.removeEventListener("resize", resize);
-      container.removeEventListener("pointermove", onPointerMove);
-      container.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", onPointerLeave);
       geometry.dispose();
       material.dispose();
       renderer.dispose();
