@@ -27,18 +27,7 @@
   ::selection { background: var(--brand); color: #fff; }
 
   /* ============ Layout ============ */
-  。page { position: relative; }
-  。ribbon-layer {
-    display: none; /* Restore the full-page ribbon by removing this line; SVG markup is kept below. */
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .ribbon-layer svg { display: block; width: 100%; height: 100%; }
+  .page { position: relative; }
 
   .container {
     max-width: 1264px;
@@ -70,7 +59,7 @@
   nav.top.nav-hidden-shell .row {
     height: 80px;
   }
-  。logo {
+  .logo {
     font-weight: 800; font-size: 22px; letter-spacing: 0;
     display: flex; align-items: center; gap: 10px;
   }
@@ -97,9 +86,9 @@
     display: flex; align-items: center; gap: 4px;
     transition: color .15s;
   }
-  。nav-links a:hover { color: var(--ink); }
-  。nav-links a svg { width: 10px; height: 10px; opacity: .6; }
-  。nav-cta { display: flex; gap: 10px; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a svg { width: 10px; height: 10px; opacity: .6; }
+  .nav-cta { display: flex; gap: 10px; }
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 18px;
@@ -121,10 +110,10 @@
     color: #fff;
   }
   .btn-primary:hover { background: var(--brand); }
-  。btn-primary svg { width: 12px; height: 12px; }
+  .btn-primary svg { width: 12px; height: 12px; }
 
   /* ============ Hero ============ */
-  section。hero {
+  section.hero {
     position: relative;
     padding: 120px 0 100px;
     min-height: 70px;
@@ -175,7 +164,7 @@
     height: 100%;
     display: block;
   }
-  。fastpay-hero-bg-mask {
+  .fastpay-hero-bg-mask {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -208,7 +197,7 @@
     display: block;
     width: min(350px, 60vw);
   }
-  。hero-brand-lockup img {
+  .hero-brand-lockup img {
     width: 100%;
     height: auto;
     display: block;
@@ -228,7 +217,7 @@
     0%, 100% { box-shadow: 0 0 0 4px rgba(22,199,132,0.18); }
     50% { box-shadow: 0 0 0 7px rgba(22,199,132,0.05); }
   }
-  。eyebrow 。num {
+  .eyebrow .num {
     color: var(--brand); font-weight: 600;
     font-family: 'Inter', sans-serif;
   }
@@ -1818,90 +1807,6 @@
 <body>
 
 <div class="page">
-
-  <!-- ============ THE RIBBON: vertical flowing through every section ============ -->
-  <div class="ribbon-layer" id="ribbon-layer">
-    <svg viewBox="0 0 1600 4400" preserveAspectRatio="xMaxYMin slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <!-- Brand-aligned color stops: indigo → violet → coral → pink -->
-        <linearGradient id="ribbonG1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ffd0e0"/>
-          <stop offset="25%" stop-color="#ff8aa8"/>
-          <stop offset="55%" stop-color="#F40064"/>
-          <stop offset="80%" stop-color="#b8004c"/>
-          <stop offset="100%" stop-color="#ff3d8a"/>
-        </linearGradient>
-        <linearGradient id="ribbonG2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ffb3cc" stop-opacity="0.85"/>
-          <stop offset="50%" stop-color="#F40064" stop-opacity="0.95"/>
-          <stop offset="100%" stop-color="#8a0040" stop-opacity="0.9"/>
-        </linearGradient>
-        <linearGradient id="ribbonG3" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#ffe0ec" stop-opacity="0.75"/>
-          <stop offset="50%" stop-color="#ff6b9a" stop-opacity="0.85"/>
-          <stop offset="100%" stop-color="#F40064" stop-opacity="0.9"/>
-        </linearGradient>
-        <filter id="ribbonBlur" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="0.5"/>
-        </filter>
-      </defs>
-
-      <!-- Three layered ribbons that snake top-to-bottom; offset on x to feel braided -->
-      <!-- Layer 1: warm wide ribbon (orange/pink dominant) -->
-      <path
-        d="M 1750 -80
-           C 1450 220, 1100 280, 1280 600
-           S 1700 950, 1500 1280
-           S 1100 1620, 1280 1950
-           S 1700 2300, 1500 2640
-           S 1100 2980, 1280 3320
-           S 1700 3680, 1450 4000
-           S 1180 4400, 1300 4500"
-        stroke="url(#ribbonG2)"
-        stroke-width="280"
-        stroke-linecap="round"
-        fill="none"
-        opacity="0.85"
-        filter="url(#ribbonBlur)"
-      />
-      <!-- Layer 2: cool blue/violet ribbon, woven across -->
-      <path
-        d="M 1850 -50
-           C 1500 280, 1280 350, 1420 680
-           S 1850 1020, 1640 1340
-           S 1240 1700, 1420 2020
-           S 1850 2380, 1640 2700
-           S 1240 3060, 1420 3380
-           S 1850 3760, 1600 4080
-           S 1320 4480, 1450 4540"
-        stroke="url(#ribbonG3)"
-        stroke-width="180"
-        stroke-linecap="round"
-        fill="none"
-        opacity="0.55"
-      />
-      <!-- Layer 3: thin highlight thread -->
-      <path
-        d="M 1700 0
-           C 1380 320, 1200 380, 1330 700
-           S 1740 1060, 1540 1380
-           S 1140 1740, 1330 2080
-           S 1740 2420, 1540 2740
-           S 1140 3080, 1330 3420
-           S 1740 3780, 1500 4100
-           S 1220 4500, 1350 4560"
-        stroke="url(#ribbonG1)"
-        stroke-width="60"
-        stroke-linecap="round"
-        fill="none"
-        opacity="0.9"
-      />
-      <!-- Soft background glow -->
-      <ellipse cx="1500" cy="600" rx="600" ry="380" fill="url(#ribbonG1)" opacity="0.08"/>
-      <ellipse cx="1400" cy="2200" rx="500" ry="320" fill="url(#ribbonG2)" opacity="0.06"/>
-      <ellipse cx="1500" cy="3700" rx="600" ry="380" fill="url(#ribbonG1)" opacity="0.08"/>
-    </svg>
-  </div>
 
   <!-- ============ NAV ============ -->
   <nav class="top nav-hidden-shell">
